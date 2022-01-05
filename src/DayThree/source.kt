@@ -48,6 +48,40 @@ fun partOne(input: List<String>): Int{
     return counter.toNumber() * counter.flip().toNumber()
 }
 
-fun partTwo(input: List<String>): Int{
-    return -1
+fun partTwo(input: List<String>): Int {
+    return calculateOxygenGeneratorRating(input) * calculateCO2ScrubberRating(input)
+}
+
+fun String.fromBinary(): Int =
+    this.reversed().foldIndexed(0) { index, acc, i ->
+        acc + (i.digitToInt() * (2.0).pow(index.toDouble()).toInt())
+    }
+
+
+fun calculateOxygenGeneratorRating(input: List<String>): Int {
+    var currentList: List<String> = input
+    for(index in input[0].indices){
+        if(currentList.size == 1) break
+        currentList = currentList.partition {
+            it[index] == '1'
+        }.run {
+            if(this.first.size >= this.second.size) this.first else this.second
+        }
+    }
+
+    return currentList[0].fromBinary()
+}
+
+fun calculateCO2ScrubberRating(input: List<String>): Int {
+    var currentList: List<String> = input
+    for(index in input[0].indices){
+        if(currentList.size == 1) break
+        currentList = currentList.partition {
+            it[index] == '0'
+        }.run {
+            if(this.first.size <= this.second.size) this.first else this.second
+        }
+    }
+
+    return currentList[0].fromBinary()
 }
